@@ -2,34 +2,32 @@ package com.chazool.sample.customerservice.service.impl;
 
 import com.chazool.sample.customerservice.exception.CustomerNotFountException;
 import com.chazool.sample.customerservice.model.Customer;
-import com.chazool.sample.customerservice.repository.CustomerDao;
-import com.chazool.sample.customerservice.repository.CustomerRepository;
+import com.chazool.sample.customerservice.dao.CustomerDao;
 import com.chazool.sample.customerservice.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
-
-    //  @Autowired
-    //  private CustomerRepository customerRepository;
 
     @Autowired
     private CustomerDao customerDao;
 
     @Override
     public Customer save(Customer customer) {
-
-        //return customerRepository.save(customer);
         return customerDao.save(customer);
     }
 
     @Override
     public Customer update(Customer customer) throws CustomerNotFountException {
-        return customerDao.update(customer);
+        try {
+            return customerDao.update(customer);
+        } catch (PersistenceException persistenceException) {
+            throw new CustomerNotFountException("Customer Not exist , " + persistenceException.getMessage());
+        }
     }
 
     @Override
@@ -49,7 +47,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> fetchAll() {
-        //  return customerRepository.findAll();
         return customerDao.fetchAll();
     }
 }

@@ -1,12 +1,12 @@
-package com.chazool.sample.customerservice.repository;
+package com.chazool.sample.customerservice.dao;
 
 import com.chazool.sample.customerservice.config.HibernateConfiguration;
 import com.chazool.sample.customerservice.exception.CustomerNotFountException;
 import com.chazool.sample.customerservice.model.Customer;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 @Repository
@@ -22,20 +22,12 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public Customer update(Customer customer) {
+    public Customer update(Customer customer) throws PersistenceException {
         Transaction transaction = null;
         Session session = HibernateConfiguration.getSessionFactory().openSession();
-
-        // start a transaction
         transaction = session.beginTransaction();
-        // save the customer object
         session.update(customer);
-        // commit transaction
         transaction.commit();
-
-        if (transaction != null) {
-            transaction.rollback();
-        }
         session.close();
         return customer;
     }
@@ -44,12 +36,15 @@ public class CustomerDaoImpl implements CustomerDao {
     public void delete(int id) {
         Transaction transaction = null;
         Session session = HibernateConfiguration.getSessionFactory().openSession();
-        Customer customer = (Customer) session.load(Customer.class, new Integer(id));
-        if (null != customer) {
+        transaction = session.beginTransaction();
+        Customer customer = session.get(Customer.class, id);
+        if (customer != null) {
             session.delete(customer);
         } else {
             throw new CustomerNotFountException("Couldn't find customer.!");
         }
+        transaction.commit();
+        session.close();
     }
 
     @Override

@@ -10,17 +10,33 @@ import org.springframework.stereotype.Service;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+/**
+ * @author chazool
+ */
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerDao customerDao;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param customer
+     * @return Customer
+     */
     @Override
     public Customer save(Customer customer) {
         return customerDao.save(customer);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param customer
+     * @return Customer
+     * @throws CustomerNotFountException
+     */
     @Override
     public Customer update(Customer customer) throws CustomerNotFountException {
         try {
@@ -30,11 +46,24 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param id
+     * @throws CustomerNotFountException
+     */
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws CustomerNotFountException {
         customerDao.delete(id);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param id
+     * @return Customer
+     * @throws CustomerNotFountException
+     */
     @Override
     public Customer fetchById(int id) throws CustomerNotFountException {
         Customer customer = customerDao.fetchById(id);
@@ -45,6 +74,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return List<Customer>l
+     */
     @Override
     public List<Customer> fetchAll() {
         return customerDao.fetchAll();

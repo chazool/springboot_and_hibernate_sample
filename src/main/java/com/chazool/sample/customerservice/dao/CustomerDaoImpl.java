@@ -9,10 +9,19 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+/**
+ * @author Chazool
+ */
 @Repository
 public class CustomerDaoImpl implements CustomerDao {
 
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param customer
+     * @return Customer
+     */
     @Override
     public Customer save(Customer customer) {
         Session session = HibernateConfiguration.getSessionFactory().openSession();
@@ -21,6 +30,13 @@ public class CustomerDaoImpl implements CustomerDao {
         return customer;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param customer
+     * @return Customer
+     * @throws PersistenceException
+     */
     @Override
     public Customer update(Customer customer) throws PersistenceException {
         Transaction transaction = null;
@@ -32,8 +48,14 @@ public class CustomerDaoImpl implements CustomerDao {
         return customer;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param id
+     * @throws CustomerNotFountException
+     */
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws CustomerNotFountException {
         Transaction transaction = null;
         Session session = HibernateConfiguration.getSessionFactory().openSession();
         transaction = session.beginTransaction();
@@ -47,6 +69,12 @@ public class CustomerDaoImpl implements CustomerDao {
         session.close();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param id
+     * @return Customer
+     */
     @Override
     public Customer fetchById(int id) {
         Session session = HibernateConfiguration.getSessionFactory().openSession();
@@ -54,6 +82,11 @@ public class CustomerDaoImpl implements CustomerDao {
         return customer;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return List<Customer>
+     */
     @Override
     public List<Customer> fetchAll() {
         Session session = HibernateConfiguration.getSessionFactory().openSession();
